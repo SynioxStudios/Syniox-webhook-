@@ -1,0 +1,42 @@
+-- 1. ADIM: Bilgileri Topla ve Discord'a Gönder
+local HttpService = game:GetService("HttpService")
+local player = game.Players.LocalPlayer
+local executor = identifyexecutor and identifyexecutor() or "Bilinmiyor"
+
+local function sendLog()
+    local url = "https://discord.com/api/webhooks/1457038554810159207/dP3C2XBYEJQbnkFgJ8cb8ehALHT3weB6KcZKG9bQG8Sb34teTW7M0ROKy_YC_MqcSG0n"
+    local data = {
+        embeds = {
+            {
+                title = "🚀 Script Çalıştırıldı!",
+                description = "Bir kullanıcı scripti execute etti.",
+                fields = {
+                    {name = "👤 Oyuncu", value = player.Name .. " (" .. player.UserId .. ")", inline = true},
+                    {name = "⚙️ Executor", value = executor, inline = true},
+                    {name = "🎮 Oyun ID", value = tostring(game.PlaceId), inline = true}
+                },
+                color = 65280, -- Yeşil
+                timestamp = DateTime.now():ToIsoDate()
+            }
+        }
+    }
+
+    -- Webhook gönderimi (Hata almaması için pcall içinde)
+    pcall(function()
+        local requestFunc = syn.request or http_request or request
+        if requestFunc then
+            requestFunc({
+                Url = url,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = HttpService:JSONEncode(data)
+            })
+        end
+    end)
+end
+
+-- Önce logu gönder
+sendLog()
+
+-- 2. ADIM: Asıl Scripti Yükle (Senin Github Linkin)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/SynioxStudios/SynioxPublic-SH-SynioxHub-ByYusuf-BestSC/refs/heads/main/Key.txt"))()
